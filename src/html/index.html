@@ -261,6 +261,51 @@
                 border-radius: 25px 25px 0 0;
                 object-fit: cover;
             }
+			
+			.backbanner {
+				position: absolute;
+				top: 0;
+				inset-inline: 0;
+				bottom: 0;
+				background-size: 100%;
+				border-radius: inherit;
+				filter: saturate(.5);
+				opacity: .3;
+				z-index: -1;
+				-webkit-mask-image: linear-gradient(180deg, #000 0, transparent 280px);
+				mask-image: linear-gradient(180deg, #000 0, transparent 280px);
+			}
+
+			.backbanner:after {
+				-webkit-backdrop-filter: blur(15px);
+				backdrop-filter: blur(15px);
+				content: "";
+				position: absolute;
+				top: 0;
+				inset-inline: 0;
+				bottom: 0;
+				-webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .5) 0, #000 280px);
+				mask-image: linear-gradient(180deg, rgba(0, 0, 0, .5) 0, #000 280px);
+			}
+
+			.profile {
+				--profile-gradient-primary-color: hsla(14, 21.2%, 20.4%, 1);
+				--profile-gradient-secondary-color: hsla(27, 64.5%, 60.2%, 1);
+				--profile-gradient-overlay-color: #00000099;
+				--profile-gradient-start: color-mix(in oklab, var(--profile-gradient-overlay-color) 100%, var(--profile-gradient-primary-color));
+				--profile-gradient-end: color-mix(in oklab, var(--profile-gradient-overlay-color) 100%, var(--profile-gradient-secondary-color));
+				background: linear-gradient(var(--profile-gradient-start), var(--profile-gradient-start) 140px, var(--profile-gradient-end));
+				width: 350px;
+				height: 600px;
+				box-sizing: border-box;
+				position: absolute;
+				bottom: 0;
+				left: 30px;
+				border-radius: 25px 25px 0 0;
+				padding: 20px;
+				overflow-y: auto;
+				z-index: 1;
+			}
 
             .displayname {
                 position: absolute;
@@ -353,31 +398,30 @@
             }
         </style>
     </head>
-    <body>
-    <div class="container" id="container">
-        <div class="profile" id="profile-content">
-            <img src="" alt="Profile Image" class="profile-image" id="profile-image">
-            <div class="onlinedot" id="onlinedot"></div>
-            <div class="status-bubble" id="status-bubble">
-                <img src="" alt="Status Emoji" class="status-emoji" id="status-emoji" style="display: none;">
-                <span class="status-text" id="status-text"></span>
-            </div>
-            <img src="" alt="Profile Banner" class="profile-banner" id="profile-banner">
-            <h1 class="displayname" id="displayname">loading</h1>
-            <p class="username" id="username">loading</p>
-            <div class="bio" id="bio">
-                <p class="bio-header">About Me</p>
-                <p class="bio-content" id="bio-content">loading</p>
-            </div>
-        </div>
-        <div class="pages-section" id="pages-section">
-            <div class="pages-navbar" id="pages-navbar">
-            </div>
-            <div class="page-content" id="page-content">
-                <p>loading page...</p>
-            </div>
-        </div>
-    </div>
+	<body>
+	<div class="container" id="container">
+		<div id="glow-bg" class="backbanner"></div>
+		
+		<div class="profile" id="profile-content">
+			<img src="" alt="Profile Image" class="profile-image" id="profile-image">
+			<div class="onlinedot" id="onlinedot"></div>
+			
+			<div class="status-bubble" id="status-bubble">
+				<img src="" alt="Status Emoji" class="status-emoji" id="status-emoji" style="display: none;">
+				<span class="status-text" id="status-text"></span>
+			</div>
+
+			<img src="" alt="Profile Banner" class="profile-banner" id="profile-banner">
+			
+			<h1 class="displayname" id="displayname">loading</h1>
+			<p class="username" id="username">loading</p>
+			
+			<div class="bio" id="bio">
+				<p class="bio-header">About Me</p>
+				<p class="bio-content" id="bio-content">loading</p>
+			</div>
+		</div>
+	</div>
     <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <script>
         function getRandomBannerColor() {
@@ -431,44 +475,46 @@
                 });
         }
 
-        function loadBanner() {
-            const profileBanner = document.getElementById('profile-banner');
-            
-            fetch('/api/profile/banner')
-                .then(response => response.json())
-                .then(bannerUrl => {
-                    if (bannerUrl && bannerUrl.trim() !== '') {
-                        // test if the URL is valid by creating a temporary banner
-                        const testImg = new Image();
-                        testImg.onload = function() {
-                            // remove any existing temp banner
-                            const existingColorBanner = document.getElementById('color-banner');
-                            if (existingColorBanner) {
-                                existingColorBanner.remove();
-                            }
-                            profileBanner.src = bannerUrl;
-                            profileBanner.style.display = 'block';
-                        };
-                        testImg.onerror = function() {
-                            console.warn('Failed to load banner from URL:', bannerUrl);
-                            setupRandomColorBanner();
-                        };
-                        // fallback if loading takes too long
-                        setTimeout(() => {
-                            if (profileBanner.src === '' || profileBanner.src === window.location.href) {
-                                setupRandomColorBanner();
-                            }
-                        }, 5000);
-                        testImg.src = bannerUrl;
-                    } else {
-                        setupRandomColorBanner();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching banner:', error);
-                    setupRandomColorBanner();
-                });
-        }
+		function loadBanner() {
+			const profileBanner = document.getElementById('profile-banner');
+			const backBanner = document.getElementById('glow-bg');
+			
+			fetch('/api/profile/banner')
+				.then(response => response.json())
+				.then(bannerUrl => {
+					if (bannerUrl && bannerUrl.trim() !== '') {
+						// test if the URL is valid by creating a temporary banner
+						const testImg = new Image();
+						testImg.onload = function() {
+							// remove any existing temp banner
+							const existingColorBanner = document.getElementById('color-banner');
+							if (existingColorBanner) {
+								existingColorBanner.remove();
+							}
+							profileBanner.src = bannerUrl;
+							profileBanner.style.display = 'block';
+							backBanner.style.backgroundImage = `url(${bannerUrl})`;
+						};
+						testImg.onerror = function() {
+							console.warn('Failed to load banner from URL:', bannerUrl);
+							setupRandomColorBanner();
+						};
+						// fallback if loading takes too long
+						setTimeout(() => {
+							if (profileBanner.src === '' || profileBanner.src === window.location.href) {
+								setupRandomColorBanner();
+							}
+						}, 5000);
+						testImg.src = bannerUrl;
+					} else {
+						setupRandomColorBanner();
+					}
+				})
+				.catch(error => {
+					console.error('Error fetching banner:', error);
+					setupRandomColorBanner();
+				});
+		}
 
         function setupRandomColorBanner() {
             const profileBanner = document.getElementById('profile-banner');
