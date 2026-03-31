@@ -9,7 +9,11 @@ import json
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory
 import discord
-from .logger import Logger
+# fix so it can run both as a pip module and locally
+try:
+    from .logger import Logger
+except ImportError:
+    from logger import Logger
 logger = Logger(name="betterbio", log_level="INFO").logger
 
 USER_ONLINE_STATUS = None
