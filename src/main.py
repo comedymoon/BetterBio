@@ -21,6 +21,8 @@ STATUS_TEXT = None
 STATUS_EMOJI = None
 AVATAR_URL = None
 BANNER_URL = None
+PROFILE_COLOR = None
+AVATAR_DECORATION = None
 JOINDATE_STRING = ""
 CONFIG = {}
 BOT_CONFIG = {}
@@ -105,11 +107,12 @@ class DiscordBot(discord.Client):
     async def _update_user_data(self, user_id):
         """Helper method to update user data"""
         global USER_ONLINE_STATUS, AVATAR_URL, BANNER_URL, JOINDATE_STRING
+        global PROFILE_COLOR, AVATAR_DECORATION
         
         user = await self.fetch_user(user_id)
         if not user:
             return
-            
+                
         # Update avatar and banner URLs
         AVATAR_URL = user.avatar.url if user.avatar else None
         BANNER_URL = user.banner.url if user.banner else None
@@ -117,11 +120,21 @@ class DiscordBot(discord.Client):
         logger.debug("Updated user PFP to %s", AVATAR_URL)
         logger.debug("Updated user banner to %s", BANNER_URL)
         
+        if user.accent_color:
+            PROFILE_COLOR = str(user.accent_color)
+        else:
+            PROFILE_COLOR = None
+
+        if user.avatar_decoration:
+            AVATAR_DECORATION = user.avatar_decoration.with_size(256).url
+        else:
+            AVATAR_DECORATION = None
+
         # Find member in any guild to get status and activities
         member = self._find_member_in_guilds(user_id)
         if not member:
             return
-            
+                
         USER_ONLINE_STATUS = str(member.status)
         logger.debug("Updated user status to %s", USER_ONLINE_STATUS)
         
@@ -229,7 +242,10 @@ def main():
     
     @app.route('/api/profile/theme')
     def profiletheme():
-        return jsonify(CONFIG.get("theme", {}))
+        theme_data = CONFIG.get("theme", {}).copy()
+        if PROFILE_COLOR:
+            theme_data["profile_color"] = PROFILE_COLOR
+        return jsonify(theme_data)
     
     @app.route('/api/profile/info')
     def profileinfo():
@@ -242,6 +258,12 @@ def main():
     @app.route('/api/profile/banner')
     def profilebanner():
         return jsonify(BANNER_URL or "")
+
+    @app.route('/api/profile/decoration')
+    def profiledecoration():
+        if AVATAR_DECORATION:
+            return jsonify(AVATAR_DECORATION)
+        return jsonify(CONFIG.get("userdata", {}).get("avatar_decoration") or "")
     
     @app.route('/api/profile/joindate')
     def profilejoindate():

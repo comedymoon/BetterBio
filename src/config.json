@@ -17,6 +17,7 @@
         "bio": "This is a sample profile.\nGo take a look at ~/.betterbio/config.json to set up your own!",
         "pfp": "https://raw.githubusercontent.com/enhancedrock/enhancedrock/refs/heads/main/squishypfp.png",
         "banner": "https://raw.githubusercontent.com/enhancedrock/enhancedrock/refs/heads/main/squishypfp.png",
+        "avatar_decoration": "https://raw.githubusercontent.com/comedymoon/comedymoon/main/e.png",
         "connections": [
             {
                 "label": "Github",

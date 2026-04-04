@@ -170,30 +170,46 @@
                 z-index: 0;
             }
 
-            .profile-image {
+			.avatar-container {
                 position: absolute;
                 top: 90px;
                 left: 22px;
-
                 width: 100px;
                 height: 100px;
-                z-index: 1;
+                z-index: 10;
+            }
 
+            .profile-image {
+                width: 100%;
+                height: 100%;
                 border-radius: 50%;
-                box-shadow: 0 0 0 6px rgba(255, 255, 255, 1);
+                object-fit: cover;
+                position: relative;
+                z-index: 1;
+                box-shadow: 0 0 0 6px var(--profile-gradient-primary-color);
+            }
+
+            .avatar-decoration {
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                width: 120px;
+                height: 120px;
+                z-index: 2;
+                pointer-events: none;
+                object-fit: cover;
+                display: block !important;
             }
 
             .onlinedot {
                 position: absolute;
-                top: 160px;
-                left: 90px;
-
-                width: 25px;
-                height: 25px;
-                z-index: 2;
-
+                bottom: 2px;
+                right: 2px;
+                width: 24px;
+                height: 24px;
+                z-index: 3;
                 border-radius: 50%;
-                box-shadow: 0 0 0 6px rgba(255, 255, 255, 1);
+                box-shadow: 0 0 0 6px var(--profile-gradient-primary-color);
                 background-color: #747f8d;
             }
 
@@ -292,42 +308,41 @@
 				mask-image: linear-gradient(180deg, rgba(0, 0, 0, .5) 0, #000 280px);
 			}
 
-            .displayname {
+			.displayname {
                 position: absolute;
-                top: 185px;
+                top: 200px;
                 left: 24px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 font-size: 24px;
-                z-index: 1;
+                z-index: 11;
             }
 
             .username {
                 position: absolute;
-                top: 216px;
+                top: 231px;
                 left: 24px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 font-size: 16px;
-                z-index: 1;
+                z-index: 11;
             }
+
             .bio {
                 width: 315px;
                 min-height: 25px;
                 box-sizing: border-box;
-
                 position: absolute;
-                top: 260px;
+                top: 275px;
                 left: 50%;
                 transform: translateX(-50%);
-
                 background-color: #151515;
                 border-radius: 10px;
                 padding: 12.5px;
                 word-wrap: break-word;
-                z-index: 3;
+                z-index: 11;
                 padding-top: 0px;
             }
 
@@ -381,14 +396,22 @@
                 color: var(--text-color, #ffffff);
                 font-family: Arial, sans-serif;
             }
+			
+			img:not([src]), img[src=""] {
+                content: "";
+                display: none !important;
+            }
         </style>
     </head>
 	<body>
 	<div class="container" id="container">
 		<div id="glow-bg" class="backbanner"></div>
 		<div class="profile" id="profile-content">
-			<img src="" alt="Profile Image" class="profile-image" id="profile-image">
-			<div class="onlinedot" id="onlinedot"></div>
+			<div class="avatar-container">
+				<img src="" alt="Profile Image" class="profile-image" id="profile-image">
+				<img src="" alt="" class="avatar-decoration" id="avatar-decoration" style="display: none;">
+				<div class="onlinedot" id="onlinedot"></div>
+			</div>
 			<div class="status-bubble" id="status-bubble">
 				<img src="" alt="Status Emoji" class="status-emoji" id="status-emoji" style="display: none;">
 				<span class="status-text" id="status-text"></span>
@@ -712,13 +735,12 @@
             // load status bubble
             loadStatusBubble();
             
-            fetch('/api/profile/theme')
+			fetch('api/profile/theme')
                 .then(response => response.json())
                 .then(data => {
                     if (data.background_color) {
                         document.body.style.backgroundColor = data.background_color;
                         
-                        // update status bubble background to match page background
                         const statusBubble = document.getElementById('status-bubble');
                         if (statusBubble) {
                             statusBubble.style.backgroundColor = data.background_color;
@@ -739,21 +761,17 @@
                             document.querySelector('.profile-image').style.boxShadow = `0 0 0 6px ${data.profile_color}`;
                             document.querySelector('.onlinedot').style.boxShadow = `0 0 0 6px ${data.profile_color}`;
                         }
-                        // set text color from theme data
+                        
                         if (data.text_color) {
                             document.documentElement.style.setProperty('--text-color', data.text_color);
-                            // apply to existing elements
                             const textElements = document.querySelectorAll('*');
                             textElements.forEach(element => {
                                 element.style.color = data.text_color;
                             });
-                            // store the color globally for new elements
                             window.themeTextColor = data.text_color;
                             
-                            // update page tabs if they exist
                             updatePageTabsColor(data.text_color);
                             
-                            // update status bubble text color
                             const statusText = document.getElementById('status-text');
                             if (statusText) {
                                 statusText.style.color = data.text_color;
@@ -771,6 +789,28 @@
                 .catch(error => {
                     console.error('Error fetching theme:', error);
                 });
+
+			fetch('api/profile/decoration')
+                .then(response => response.json())
+                .then(url => {
+                    if (url && url.trim() !== '') {
+                        const deco = document.getElementById('avatar-decoration');
+                        if (deco) {
+                            deco.src = url;
+                            deco.onload = function() {
+                                deco.style.display = 'block';
+                            };
+                            deco.onerror = function() {
+                                console.error('Failed to load decoration image from:', url);
+                                deco.style.display = 'none';
+                            };
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching decoration metadata:', error);
+                });
+				
             fetch('api/profile/info')
                 .then(response => response.json())
                 .then(data => {
