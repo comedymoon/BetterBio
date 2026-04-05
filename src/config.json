@@ -5,24 +5,24 @@
         "user_id": 123456789012345678
     },
     "theme": {
-        "background_color": "#0c0c0c",
-        "profile_color": "#1e1e1e",
-        "text_color": "#ffffff",
-        "title": "BetterBio"
+        "background_color": "",
+        "profile_color": "",
+        "text_color": "",
+        "title": ""
     },
     "userdata": {
-        "name": "Hey there!",
-        "username": "hey_hey",
-        "pronouns": "yeah/you",
-        "bio": "This is a sample profile.\nGo take a look at ~/.betterbio/config.json to set up your own!",
-        "pfp": "https://raw.githubusercontent.com/enhancedrock/enhancedrock/refs/heads/main/squishypfp.png",
-        "banner": "https://raw.githubusercontent.com/enhancedrock/enhancedrock/refs/heads/main/squishypfp.png",
-        "avatar_decoration": "https://raw.githubusercontent.com/comedymoon/comedymoon/main/e.png",
+        "name": "",
+        "username": "",
+        "pronouns": "",
+        "bio": "",
+        "pfp": "",
+        "banner": "",
+        "avatar_decoration": "",
         "connections": [
             {
-                "label": "Github",
-                "url": "https://github.com/enhancedrock/BetterBio/",
-                "iconurl": "https://cdn-icons-png.flaticon.com/512/25/25231.png"
+                "label": "",
+                "url": "",
+                "iconurl": ""
             }
         ]
     },

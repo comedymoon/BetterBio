@@ -1,176 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="/favicon.ico">
-        <title>betterbio</title>
-        <style>
-            body {
-                background-color: #0c0c0c;
-            }
-            
-            .container {
-                display: none;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico">
+    <title>betterbio</title>
+    <style>
+        body {
+            background-color: #0c0c0c;
+        }
 
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
+        .container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #151515;
+            border-radius: 25px;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+            padding: 20px;
+            width: 800px;
+            height: 600px;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
 
-                background-color: #151515;
-                border-radius: 25px;
-                box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
-                padding: 20px;
-                width: 800px;
-                height: 600px;
-                max-width: 90vw;
-                max-height: 90vh;
-            }
-			
-			.profile {
-				width: 350px;
-				height: 600px;
-				box-sizing: border-box;
-				position: absolute;
-				bottom: 0;
-				left: 30px;
-				z-index: 1;
-				border-radius: 25px 25px 0 0;
-				box-shadow: none;
-				padding: 20px;
-				--profile-gradient-primary-color: hsla(14, 21.2%, 20.4%, 1);
-				--profile-gradient-secondary-color: hsla(27, 64.5%, 60.2%, 1);
-				--profile-gradient-overlay-color: #00000099;
-				--profile-gradient-start: color-mix(in oklab, var(--profile-gradient-overlay-color) 100%, var(--profile-gradient-primary-color));
-				--profile-gradient-end: color-mix(in oklab, var(--profile-gradient-overlay-color) 100%, var(--profile-gradient-secondary-color));
-				background: var(--gradient, var(--gradient-color, linear-gradient(var(--profile-gradient-start), var(--profile-gradient-start) 140px, var(--profile-gradient-end))));
-				overflow-y: auto;
-				overflow-x: hidden;
-				scrollbar-width: none;
-				-ms-overflow-style: none;
-			}
-
+        .profile {
+            width: 350px;
+            height: 600px;
+            box-sizing: border-box;
+            position: absolute;
+            bottom: 0;
+            left: 30px;
+            z-index: 1;
+            border-radius: 25px 25px 0 0;
+            box-shadow: none;
+            padding: 20px;
+            --profile-gradient-primary-color: hsla(14, 21.2%, 20.4%, 1);
+            --profile-gradient-secondary-color: hsla(27, 64.5%, 60.2%, 1);
+            --profile-gradient-overlay-color: #00000099;
+            --profile-gradient-start: color-mix(in oklab, var(--profile-gradient-overlay-color) 100%, var(--profile-gradient-primary-color));
+            --profile-gradient-end:   color-mix(in oklab, var(--profile-gradient-overlay-color) 100%, var(--profile-gradient-secondary-color));
+            background: var(--gradient, var(--gradient-color, linear-gradient(
+                var(--profile-gradient-start),
+                var(--profile-gradient-start) 140px,
+                var(--profile-gradient-end)
+            )));
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
             .profile::-webkit-scrollbar {
                 display: none;
             }
 
-            .pages-section {
-                position: absolute;
-                top: 40px;
-                left: 400px;
-                right: 20px;
-                height: 560px;
-                display: flex;
-                flex-direction: column;
-            }
+        .profile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 140px;
+            background-color: #151515;
+            border-radius: 25px 25px 0 0;
+            z-index: 0;
+        }
 
-            .pages-navbar {
-                height: 50px;
-                border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-                overflow-x: auto;
-                overflow-y: hidden;
-                display: flex;
-                align-items: center;
-                padding: 0 10px;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-            }
+        .profile-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 25px 25px 0 0;
+            z-index: 1;
+        }
 
-            .page-tab {
-                flex-shrink: 0;
-                padding: 8px 16px;
-                margin-right: 10px;
-                background-color: transparent;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 14px;
-                font-weight: 500;
-                transition: all 0.2s ease;
-                white-space: nowrap;
-            }
+        .backbanner {
+            position: absolute;
+            top: 0; inset-inline: 0; bottom: 0;
+            background-size: 100%;
+            border-radius: inherit;
+            filter: saturate(.5);
+            opacity: .3;
+            z-index: -1;
+            -webkit-mask-image: linear-gradient(180deg, #000 0, transparent 280px);
+            mask-image:         linear-gradient(180deg, #000 0, transparent 280px);
+        }
+        .backbanner::after {
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            content: "";
+            position: absolute;
+            top: 0; inset-inline: 0; bottom: 0;
+            -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 280px);
+            mask-image:         linear-gradient(180deg, rgba(0,0,0,.5) 0, #000 280px);
+        }
 
-            .page-tab:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-
-            .page-tab.active {
-                background-color: rgba(255, 255, 255, 0.15);
-                color: var(--text-color, #ffffff);
-            }
-
-            .page-tab.inactive {
-                color: color-mix(in srgb, var(--text-color, #ffffff) 60%, transparent);
-            }
-
-            .page-content {
-                flex: 1;
-                border-radius: 10px;
-                padding: 20px;
-                overflow-y: auto;
-                overflow-x: hidden;
-                word-wrap: break-word;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-            }
-
-            .page-content::-webkit-scrollbar {
-                display: none;
-            }
-
-            .page-content h1, .page-content h2, .page-content h3, 
-            .page-content h4, .page-content h5, .page-content h6 {
-                margin-top: 0;
-                margin-bottom: 0.5em;
-            }
-
-            .page-content p {
-                margin: 0 0 1em 0;
-                line-height: 1.6;
-            }
-
-            .page-content ul, .page-content ol {
-                margin: 0 0 1em 0;
-                padding-left: 1.5em;
-            }
-
-            .page-content code {
-                background-color: rgba(255, 255, 255, 0.1);
-                padding: 2px 4px;
-                border-radius: 3px;
-                font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-                font-size: 0.9em;
-            }
-
-            .page-content pre {
-                background-color: rgba(255, 255, 255, 0.1);
-                padding: 15px;
-                border-radius: 6px;
-                overflow-x: auto;
-                margin: 0 0 1em 0;
-            }
-
-            .page-content blockquote {
-                border-left: 4px solid rgba(255, 255, 255, 0.3);
-                padding-left: 15px;
-                margin: 0 0 1em 0;
-                font-style: italic;
-            }
-
-            .profile::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 140px;
-                background-color: #151515;
-                border-radius: 25px 25px 0 0;
-                z-index: 0;
-            }
-
-			.avatar-container {
+		.avatar-container {
                 position: absolute;
                 top: 90px;
                 left: 22px;
@@ -178,7 +109,6 @@
                 height: 100px;
                 z-index: 10;
             }
-
             .profile-image {
                 width: 100%;
                 height: 100%;
@@ -188,7 +118,6 @@
                 z-index: 1;
                 box-shadow: 0 0 0 6px var(--profile-gradient-primary-color);
             }
-
             .avatar-decoration {
                 position: absolute;
                 top: -10px;
@@ -213,184 +142,328 @@
                 background-color: #747f8d;
             }
 
-            .status-bubble {
-                position: absolute;
-                top: 120px;
-                left: 135px;
-                z-index: 2;
+        .badges-row {
+            position: absolute;
+            top: 82px;
+            right: 12px;
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 4px;
+            z-index: 10;
+            flex-wrap: wrap-reverse;
+            max-width: 180px;
+            justify-content: flex-start;
+        }
+        .badge-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+            cursor: default;
+        }
 
-                background-color: #0c0c0c;
-                border-radius: 15px;
-                padding: 8px 12px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-                
+        .name-block {
+            position: absolute;
+            top: 200px;
+            left: 16px;
+            right: 16px;
+            z-index: 11;
+        }
+        .displayname {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 2px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .username-line {
+            font-size: 14px;
+            margin: 0;
+            opacity: 0.75;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .clan-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .clan-badge-img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+        }
+
+        .status-bubble {
+            position: absolute;
+            top: 116px;
+            left: 120px;
+            z-index: 12;
+            background-color: #0c0c0c;
+            border-radius: 12px;
+            padding: 6px 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+            display: none;
+            align-items: center;
+            gap: 6px;
+            max-width: 185px;
+            font-size: 12px;
+            line-height: 1.3;
+            cursor: default;
+        }
+        .status-bubble.visible { display: flex; }
+        .status-emoji {
+            width: 15px; height: 15px;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+        .status-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .bio-scroll {
+            position: absolute;
+            top: 260px;
+            left: 0; right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 16px 20px;
+            z-index: 11;
+        }
+        .bio-scroll::-webkit-scrollbar { display: none; }
+
+        .bio-section-header {
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            opacity: 0.55;
+            margin: 14px 0 5px;
+        }
+        .bio-section-header:first-child { margin-top: 0; }
+
+        .bio-content {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+            margin: 0;
+        }
+        .bio-content p { margin: 0; }
+        .bio-content p + p { margin-top: 0.4em; }
+
+        .connection-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .connection-icon {
+            width: 20px; height: 20px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+        }
+        .connection-label { text-decoration: underline; opacity: 0.9; }
+
+        .spotify-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 215, 96, 0.12);
+            border: 1px solid rgba(30, 215, 96, 0.25);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .spotify-card:hover { background: rgba(30, 215, 96, 0.2); }
+        .spotify-art {
+            width: 48px; height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .spotify-info { flex: 1; overflow: hidden; }
+        .spotify-title {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .spotify-artist {
+            font-size: 12px;
+            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .spotify-logo {
+            width: 20px; height: 20px;
+            flex-shrink: 0;
+        }
+        .spotify-bar-wrap {
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .spotify-bar-fill {
+            height: 100%;
+            background: #1ed760;
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+
+        .activity-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 6px;
+        }
+        .activity-img {
+            width: 48px; height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.1);
+        }
+        .activity-info { flex: 1; overflow: hidden; }
+        .activity-type {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.5;
+            margin-bottom: 2px;
+        }
+        .activity-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .activity-detail {
+            font-size: 12px;
+            opacity: 0.65;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pages-section {
+            position: absolute;
+            top: 40px;
+            left: 400px;
+            right: 20px;
+            height: 560px;
+            display: flex;
+            flex-direction: column;
+        }
+        .pages-navbar {
+            height: 50px;
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+            overflow-x: auto;
+            overflow-y: hidden;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .page-tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            margin-right: 10px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .page-tab:hover { background: rgba(255,255,255,0.1); }
+        .page-tab.active { background: rgba(255,255,255,0.15); color: var(--text-color, #fff); }
+        .page-tab.inactive { color: color-mix(in srgb, var(--text-color, #fff) 60%, transparent); }
+        .page-content {
+            flex: 1;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            word-wrap: break-word;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .page-content::-webkit-scrollbar { display: none; }
+        .page-content h1,.page-content h2,.page-content h3,
+        .page-content h4,.page-content h5,.page-content h6 { margin: 0 0 0.5em; }
+        .page-content p { margin: 0 0 1em; line-height: 1.6; }
+        .page-content ul,.page-content ol { margin: 0 0 1em; padding-left: 1.5em; }
+        .page-content code {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco','Menlo','Consolas',monospace;
+            font-size: 0.9em;
+        }
+        .page-content pre {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0 0 1em;
+        }
+        .page-content blockquote {
+            border-left: 4px solid rgba(255,255,255,0.3);
+            padding-left: 15px;
+            margin: 0 0 1em;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                background: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+            .profile {
+                display: block;
+                position: fixed;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                border-radius: 25px;
+                width: 350px;
+                height: 600px;
+                max-width: 90vw;
+                max-height: 90vh;
+            }
+            .pages-section {
                 display: none;
-                align-items: center;
-                gap: 8px;
-                
-                max-width: 185px;
-                width: fit-content;
-                word-wrap: break-word;
-                font-size: 13px;
-                line-height: 1.3;
-                
-                transition: max-width 0.3s ease, box-shadow 0.3s ease;
-                cursor: pointer;
             }
-
-            .status-bubble:hover {
-                max-width: 185px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-                z-index: 10;
-            }
-
-            .status-bubble.visible {
-                display: flex;
-            }
-
-            .status-emoji {
-                width: 16px;
-                height: 16px;
-                flex-shrink: 0;
-                border-radius: 2px;
-            }
-
-            .status-text {
-                flex: 1;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                transition: white-space 0.3s ease;
-            }
-
-            .status-bubble:hover .status-text {
-                white-space: normal;
-                word-wrap: break-word;
-            }
-
-            .profile-banner {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-
-                width: 100%;
-                height: 140px;
-                z-index: 0;
-                
-                border-radius: 25px 25px 0 0;
-                object-fit: cover;
-            }
-			
-			.backbanner {
-				position: absolute;
-				top: 0;
-				inset-inline: 0;
-				bottom: 0;
-				background-size: 100%;
-				border-radius: inherit;
-				filter: saturate(.5);
-				opacity: .3;
-				z-index: -1;
-				-webkit-mask-image: linear-gradient(180deg, #000 0, transparent 280px);
-				mask-image: linear-gradient(180deg, #000 0, transparent 280px);
-			}
-
-			.backbanner:after {
-				-webkit-backdrop-filter: blur(15px);
-				backdrop-filter: blur(15px);
-				content: "";
-				position: absolute;
-				top: 0;
-				inset-inline: 0;
-				bottom: 0;
-				-webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .5) 0, #000 280px);
-				mask-image: linear-gradient(180deg, rgba(0, 0, 0, .5) 0, #000 280px);
-			}
-
-			.displayname {
-                position: absolute;
-                top: 200px;
-                left: 24px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-size: 24px;
-                z-index: 11;
-            }
-
-            .username {
-                position: absolute;
-                top: 231px;
-                left: 24px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-size: 16px;
-                z-index: 11;
-            }
-
-            .bio {
-                width: 315px;
-                min-height: 25px;
-                box-sizing: border-box;
-                position: absolute;
-                top: 275px;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: #151515;
-                border-radius: 10px;
-                padding: 12.5px;
-                word-wrap: break-word;
-                z-index: 11;
-                padding-top: 0px;
-            }
-
-            .bio-content {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-
-            .bio-content p {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-
-            .bio-content p + p {
-                margin-top: 0.5em;
-            }
-
-            .bio-header {
-                font-weight: bold;
-                font-size: 12px;
-                margin-top: 14px;
-                margin-bottom: 8px;
-            }
-
-            @media (max-width: 768px) {
-                .container {
-                    background: none !important;
-                    box-shadow: none !important;
-                    padding: 0 !important;
-                }
-                
-                .profile {
-                    display: block;
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    border-radius: 25px;
-                    width: 350px;
-                    height: 600px;
-                    max-width: 90vw;
-                    max-height: 90vh;
-                }
-
-                .pages-section {
-                    display: none;
-                }
-            }
+        }
 
             * {
                 color: var(--text-color, #ffffff);
@@ -401,508 +474,506 @@
                 content: "";
                 display: none !important;
             }
-        </style>
-    </head>
-	<body>
-	<div class="container" id="container">
-		<div id="glow-bg" class="backbanner"></div>
-		<div class="profile" id="profile-content">
-			<div class="avatar-container">
-				<img src="" alt="Profile Image" class="profile-image" id="profile-image">
-				<img src="" alt="" class="avatar-decoration" id="avatar-decoration" style="display: none;">
-				<div class="onlinedot" id="onlinedot"></div>
-			</div>
-			<div class="status-bubble" id="status-bubble">
-				<img src="" alt="Status Emoji" class="status-emoji" id="status-emoji" style="display: none;">
-				<span class="status-text" id="status-text"></span>
-			</div>
-			<img src="" alt="Profile Banner" class="profile-banner" id="profile-banner">
-			<h1 class="displayname" id="displayname">loading</h1>
-			<p class="username" id="username">loading</p>
-			<div class="bio" id="bio">
-				<p class="bio-header">About Me</p>
-				<p class="bio-content" id="bio-content">loading</p>
-			</div>
-		</div>
-        <div class="pages-section" id="pages-section">
-            <div class="pages-navbar" id="pages-navbar">
-            </div>
-            <div class="page-content" id="page-content">
-                <p>loading page...</p>
-            </div>
+    </style>
+</head>
+<body>
+<div class="container" id="container">
+    <div id="glow-bg" class="backbanner"></div>
+
+    <div class="profile" id="profile-content">
+        <img src="" alt="Profile Banner" class="profile-banner" id="profile-banner">
+
+        <div class="avatar-container">
+            <img src="" alt="Profile Image" class="profile-image" id="profile-image">
+            <img src="" alt="" class="avatar-decoration" id="avatar-decoration" style="display:none;">
+            <div class="onlinedot" id="onlinedot"></div>
+        </div>
+
+        <div class="badges-row" id="badges-row"></div>
+
+        <div class="status-bubble" id="status-bubble">
+            <img src="" alt="Status Emoji" class="status-emoji" id="status-emoji" style="display:none;">
+            <span class="status-text" id="status-text"></span>
+        </div>
+
+        <div class="name-block">
+            <h1 class="displayname" id="displayname">loading</h1>
+            <p class="username-line" id="username-line">
+                <span id="username-text">loading</span>
+                <span class="clan-tag" id="clan-tag" style="display:none;">
+                    <img src="" class="clan-badge-img" id="clan-badge-img" style="display:none;">
+                    <span id="clan-tag-text"></span>
+                </span>
+            </p>
+        </div>
+
+        <div class="bio-scroll" id="bio-scroll">
+            <p class="bio-section-header">About Me</p>
+            <div class="bio-content" id="bio-content">loading</div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
-    <script>
-        function getRandomBannerColor() {
-            const colors = [
-                '#5865f2', '#57f287', '#fee75c', '#eb459e', '#ed4245',
-                '#f38ba8', '#94b3fd', '#9bb59a', '#fab387', '#cba6f7',
-                '#74c7ec', '#a6e3a1', '#f9e2af', '#eba0ac', '#89b4fa'
-            ];
-            return colors[Math.floor(Math.random() * colors.length)];
+
+    <div class="pages-section" id="pages-section">
+        <div class="pages-navbar" id="pages-navbar"></div>
+        <div class="page-content" id="page-content">
+            <p>loading page...</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+<script>
+function parseColor(color) {
+    color = (color || '').trim();
+    if (/^#[0-9a-f]{6}$/i.test(color))
+        return { r: parseInt(color.slice(1,3),16), g: parseInt(color.slice(3,5),16), b: parseInt(color.slice(5,7),16) };
+    if (/^#[0-9a-f]{3}$/i.test(color))
+        return { r: parseInt(color[1]+color[1],16), g: parseInt(color[2]+color[2],16), b: parseInt(color[3]+color[3],16) };
+    const m = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+    if (m) return { r: +m[1], g: +m[2], b: +m[3] };
+    return null;
+}
+function relativeLuminance({r,g,b}) {
+    const l = c => { c/=255; return c<=0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055,2.4); };
+    return 0.2126*l(r) + 0.7152*l(g) + 0.0722*l(b);
+}
+function getContrastTextColor(bgColor) {
+    const rgb = parseColor(bgColor);
+    if (!rgb) return null;
+    return (1.05 / (relativeLuminance(rgb) + 0.05)) >= 3 ? '#ffffff' : '#000000';
+}
+function applyTextColor(color) {
+    document.documentElement.style.setProperty('--text-color', color);
+    document.querySelectorAll('*').forEach(el => el.style.color = color);
+    window.themeTextColor = color;
+    updatePageTabsColor(color);
+    const st = document.getElementById('status-text');
+    if (st) st.style.color = color;
+}
+
+function getDefaultAvatar() {
+    return 'data:image/svg+xml,' + encodeURIComponent(
+        `<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="50" fill="#5865F2"/>
+            <text x="50" y="60" font-family="Arial" font-size="40" font-weight="bold" text-anchor="middle" fill="white">?</text>
+        </svg>`
+    );
+}
+function getRandomBannerColor() {
+    const colors = ['#5865f2','#57f287','#fee75c','#eb459e','#ed4245',
+                    '#f38ba8','#94b3fd','#9bb59a','#fab387','#cba6f7',
+                    '#74c7ec','#a6e3a1','#f9e2af','#eba0ac','#89b4fa'];
+    return colors[Math.floor(Math.random()*colors.length)];
+}
+function loadAvatar() {
+    const img = document.getElementById('profile-image');
+    fetch('/api/profile/avatar').then(r=>r.json()).then(url => {
+        if (!url || !url.trim()) { img.src = getDefaultAvatar(); return; }
+        const t = new Image();
+        t.onload = () => img.src = url;
+        t.onerror = () => img.src = getDefaultAvatar();
+        setTimeout(() => { if (!img.src || img.src===window.location.href) img.src=getDefaultAvatar(); }, 5000);
+        t.src = url;
+    }).catch(() => img.src = getDefaultAvatar());
+}
+function loadBanner() {
+    const banner = document.getElementById('profile-banner');
+    const back   = document.getElementById('glow-bg');
+    fetch('/api/profile/banner').then(r=>r.json()).then(url => {
+        if (!url || !url.trim()) { setupColorBanner(); return; }
+        const t = new Image();
+        t.onload = () => { banner.src = url; banner.style.display='block'; back.style.backgroundImage=`url(${url})`; };
+        t.onerror = () => setupColorBanner();
+        setTimeout(() => { if (!banner.src || banner.src===window.location.href) setupColorBanner(); }, 5000);
+        t.src = url;
+    }).catch(() => setupColorBanner());
+}
+function setupColorBanner() {
+    const banner = document.getElementById('profile-banner');
+    banner.style.display = 'none';
+    let div = document.getElementById('color-banner');
+    const c = getRandomBannerColor();
+    if (!div) {
+        div = document.createElement('div');
+        div.id = 'color-banner';
+        div.style.cssText = `position:absolute;top:0;left:0;right:0;width:100%;height:120px;z-index:1;border-radius:25px 25px 0 0;background-color:${c};`;
+        banner.parentNode.insertBefore(div, banner);
+    } else { div.style.backgroundColor = c; }
+}
+
+const STATUS_COLORS = { online:'#43b581', idle:'#faa61a', dnd:'#f04747' };
+function loadStatusDot() {
+    fetch('/api/status/online').then(r=>r.json()).then(s => {
+        const dot = document.getElementById('onlinedot');
+        if (STATUS_COLORS[s]) dot.style.backgroundColor = STATUS_COLORS[s];
+        else dot.style.display = 'none';
+    }).catch(()=>{});
+}
+
+function loadStatusBubble() {
+    const bubble = document.getElementById('status-bubble');
+    const eImg   = document.getElementById('status-emoji');
+    const eTxt   = document.getElementById('status-text');
+    Promise.all([
+        fetch('/api/status/text').then(r=>r.json()),
+        fetch('/api/status/emoji').then(r=>r.json()),
+    ]).then(([text, emoji]) => {
+        const hasText  = text  && text.trim()  !== '';
+        const hasEmoji = emoji && emoji.trim() !== '';
+        if (!hasText && !hasEmoji) { bubble.classList.remove('visible'); return; }
+
+        if (hasEmoji && emoji.startsWith('http')) {
+            eImg.src = emoji; eImg.style.display = 'block';
+        } else { eImg.style.display = 'none'; }
+
+        if (hasText) {
+            eTxt.textContent = (hasEmoji && !emoji.startsWith('http')) ? `${emoji} ${text}` : text;
+        } else if (hasEmoji && !emoji.startsWith('http')) {
+            eTxt.textContent = emoji;
         }
+        bubble.classList.add('visible');
+        if (window.themeTextColor) eTxt.style.color = window.themeTextColor;
+    }).catch(()=>{});
+}
 
-        function getDefaultAvatar() {
-            return 'data:image/svg+xml,' + encodeURIComponent(`
-                <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="50" fill="#5865F2"/>
-                    <text x="50" y="60" font-family="Arial, sans-serif" font-size="40" font-weight="bold" text-anchor="middle" fill="white">?</text>
-                </svg>
-            `);
-        }
-
-        function loadAvatar() {
-            const profileImage = document.getElementById('profile-image');
-            
-            fetch('/api/profile/avatar')
-                .then(response => response.json())
-                .then(avatarUrl => {
-                    if (avatarUrl && avatarUrl.trim() !== '') {
-                        // test if the URL is valid by creating a temporary pfp
-                        const testImg = new Image();
-                        testImg.onload = function() {
-                            profileImage.src = avatarUrl;
-                        };
-                        testImg.onerror = function() {
-                            console.warn('Failed to load avatar from URL:', avatarUrl);
-                            profileImage.src = getDefaultAvatar();
-                        };
-                        // fallback if loading takes too long
-                        setTimeout(() => {
-                            if (profileImage.src === '' || profileImage.src === window.location.href) {
-                                profileImage.src = getDefaultAvatar();
-                            }
-                        }, 5000);
-                        testImg.src = avatarUrl;
-                    } else {
-                        profileImage.src = getDefaultAvatar();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching avatar:', error);
-                    profileImage.src = getDefaultAvatar();
-                });
-        }
-
-		function loadBanner() {
-			const profileBanner = document.getElementById('profile-banner');
-			const backBanner = document.getElementById('glow-bg');
-			
-			fetch('/api/profile/banner')
-				.then(response => response.json())
-				.then(bannerUrl => {
-					if (bannerUrl && bannerUrl.trim() !== '') {
-						// test if the URL is valid by creating a temporary banner
-						const testImg = new Image();
-						testImg.onload = function() {
-							// remove any existing temp banner
-							const existingColorBanner = document.getElementById('color-banner');
-							if (existingColorBanner) {
-								existingColorBanner.remove();
-							}
-							profileBanner.src = bannerUrl;
-							profileBanner.style.display = 'block';
-							backBanner.style.backgroundImage = `url(${bannerUrl})`;
-						};
-						testImg.onerror = function() {
-							console.warn('Failed to load banner from URL:', bannerUrl);
-							setupRandomColorBanner();
-						};
-						// fallback if loading takes too long
-						setTimeout(() => {
-							if (profileBanner.src === '' || profileBanner.src === window.location.href) {
-								setupRandomColorBanner();
-							}
-						}, 5000);
-						testImg.src = bannerUrl;
-					} else {
-						setupRandomColorBanner();
-					}
-				})
-				.catch(error => {
-					console.error('Error fetching banner:', error);
-					setupRandomColorBanner();
-				});
-		}
-
-        function setupRandomColorBanner() {
-            const profileBanner = document.getElementById('profile-banner');
-            const randomColor = getRandomBannerColor();
-            
-            // hide image
-            profileBanner.style.display = 'none';
-            
-            // create div to act as colored banner
-            let colorBanner = document.getElementById('color-banner');
-            if (!colorBanner) {
-                colorBanner = document.createElement('div');
-                colorBanner.id = 'color-banner';
-                colorBanner.style.cssText = `
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    width: 100%;
-                    height: 140px;
-                    z-index: 0;
-                    border-radius: 25px 25px 0 0;
-                    background-color: ${randomColor};
-                `;
-                // insert before profile banner
-                profileBanner.parentNode.insertBefore(colorBanner, profileBanner);
-            } else {
-                colorBanner.style.backgroundColor = randomColor;
-            }
-        }
-        
-        let currentActivePage = null;
-        let availablePages = [];
-
-        function loadPages() {
-            fetch('/pages')
-                .then(response => response.json())
-                .then(pages => {
-                    availablePages = pages;
-                    setupPagesNavbar(pages);
-                    if (pages.length > 0) {
-                        // find preferred default page (about/ABOUT/readme/README)
-                        const preferredPages = ['about', 'ABOUT', 'readme', 'README'];
-                        let defaultPage = pages[0]; // fallback to first page
-                        
-                        for (const preferred of preferredPages) {
-                            if (pages.includes(preferred)) {
-                                defaultPage = preferred;
-                                break;
-                            }
-                        }
-                        
-                        loadPageContent(defaultPage);
-                        setActiveTab(defaultPage);
-                    } else {
-                        document.getElementById('page-content').style.display = 'none';
-                        document.getElementById('pages-navbar').style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching pages:', error);
-                    document.getElementById('page-content').style.display = 'none';
-                    document.getElementById('pages-navbar').style.display = 'none';
-                });
-        }
-
-        function setupPagesNavbar(pages) {
-            const navbar = document.getElementById('pages-navbar');
-            navbar.innerHTML = '';
-            
-            pages.forEach(pageName => {
-                const tab = document.createElement('button');
-                tab.className = 'page-tab inactive';
-                tab.textContent = pageName;
-                tab.dataset.pageName = pageName;
-                
-                tab.addEventListener('click', () => {
-                    loadPageContent(pageName);
-                    setActiveTab(pageName);
-                });
-                
-                navbar.appendChild(tab);
-            });
-        }
-
-        function setActiveTab(activePage) {
-            currentActivePage = activePage;
-            const tabs = document.querySelectorAll('.page-tab');
-            tabs.forEach(tab => {
-                if (tab.dataset.pageName === activePage) {
-                    tab.className = 'page-tab active';
-                    if (window.themeTextColor) {
-                        tab.style.color = window.themeTextColor;
-                    }
-                } else {
-                    tab.className = 'page-tab inactive';
-                    if (window.themeTextColor) {
-                        tab.style.color = `color-mix(in srgb, ${window.themeTextColor} 60%, transparent)`;
-                    }
-                }
-            });
-        }
-
-        function loadPageContent(pageName) {
-            const contentDiv = document.getElementById('page-content');
-            contentDiv.innerHTML = '<p>loading page...</p>';
-            
-            fetch(`/page/${pageName}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to load page: ${response.status}`);
-                    }
-                    return response.text();
-                })
-                .then(markdownContent => {
-                    marked.setOptions({
-                        breaks: true,
-                        gfm: true
-                    });
-                    contentDiv.innerHTML = marked.parse(markdownContent);
-                    
-                    // apply theme text color to all new elements
-                    if (window.themeTextColor) {
-                        const newElements = contentDiv.querySelectorAll('*');
-                        newElements.forEach(element => {
-                            element.style.color = window.themeTextColor;
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading page content:', error);
-                    contentDiv.innerHTML = `<p>Error loading page "${pageName}": ${error.message}</p>`;
-                });
-        }
-
-        function updatePageTabsColor(textColor) {
-            const tabs = document.querySelectorAll('.page-tab');
-            tabs.forEach(tab => {
-                if (tab.classList.contains('active')) {
-                    tab.style.color = textColor;
-                } else {
-                    tab.style.color = `color-mix(in srgb, ${textColor} 60%, transparent)`;
-                }
-            });
-        }
-
-        function loadStatusBubble() {
-            const statusBubble = document.getElementById('status-bubble');
-            const statusEmoji = document.getElementById('status-emoji');
-            const statusText = document.getElementById('status-text');
-            
-            Promise.all([
-                fetch('/api/status/text').then(response => response.json()),
-                fetch('/api/status/emoji').then(response => response.json())
-            ])
-            .then(([text, emoji]) => {
-                const hasText = text && text.trim() !== '';
-                const hasEmoji = emoji && emoji.trim() !== '';
-                
-                if (hasText || hasEmoji) {
-                    if (hasEmoji) {
-                        // Check if emoji is a URL (custom Discord emoji or Twemoji)
-                        if (emoji.startsWith('http')) {
-                            statusEmoji.src = emoji;
-                            statusEmoji.style.display = 'block';
-                        } else {
-                            // Unicode emoji - display as text
-                            statusEmoji.style.display = 'none';
-                            statusText.textContent = `${emoji} ${text || ''}`.trim();
-                        }
-                    } else {
-                        statusEmoji.style.display = 'none';
-                    }
-                    
-                    if (hasText && hasEmoji && emoji.startsWith('http')) {
-                        statusText.textContent = text;
-                    } else if (hasText && (!hasEmoji || !emoji.startsWith('http'))) {
-                        // Text already set above for unicode emoji case
-                        if (!hasEmoji) {
-                            statusText.textContent = text;
-                        }
-                    }
-                    
-                    statusBubble.classList.add('visible');
-                    
-                    // Apply theme color if available
-                    if (window.themeTextColor) {
-                        statusText.style.color = window.themeTextColor;
-                    }
-                } else {
-                    statusBubble.classList.remove('visible');
-                }
-            })
-            .catch(error => {
-                console.error('Error loading status:', error);
-                statusBubble.classList.remove('visible');
-            });
-        }
-
-        window.addEventListener('load', function() {
-            // load pfp & banner
-            loadAvatar();
-            loadBanner();
-            
-            // load pages
-            loadPages();
-            
-            // load status bubble
-            loadStatusBubble();
-            
-			fetch('api/profile/theme')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.background_color) {
-                        document.body.style.backgroundColor = data.background_color;
-                        
-                        const statusBubble = document.getElementById('status-bubble');
-                        if (statusBubble) {
-                            statusBubble.style.backgroundColor = data.background_color;
-                        }
-                        
-                        if (Array.isArray(data.profile_color)) {
-                            const gradient = `linear-gradient(180deg, ${data.profile_color[0]} 0%, ${data.profile_color[1]} 100%)`;
-                            const darkerGradient = `linear-gradient(180deg, color-mix(in srgb, ${data.profile_color[0]} 70%, black) 0%, color-mix(in srgb, ${data.profile_color[1]} 70%, black) 100%)`;
-                            document.querySelector('.container').style.background = darkerGradient;
-                            document.querySelector('.profile').style.setProperty('--gradient', gradient);
-                            document.querySelector('.profile-image').style.boxShadow = `0 0 0 6px ${data.profile_color[0]}`;
-                            document.querySelector('.onlinedot').style.boxShadow = `0 0 0 6px ${data.profile_color[0]}`;
-
-                        } else if (data.profile_color) {
-                            const darkerColor = `color-mix(in srgb, ${data.profile_color} 70%, black)`;
-                            document.querySelector('.container').style.backgroundColor = darkerColor;
-                            document.querySelector('.profile').style.setProperty('--gradient-color', data.profile_color);
-                            document.querySelector('.profile-image').style.boxShadow = `0 0 0 6px ${data.profile_color}`;
-                            document.querySelector('.onlinedot').style.boxShadow = `0 0 0 6px ${data.profile_color}`;
-                        }
-                        
-                        if (data.text_color) {
-                            document.documentElement.style.setProperty('--text-color', data.text_color);
-                            const textElements = document.querySelectorAll('*');
-                            textElements.forEach(element => {
-                                element.style.color = data.text_color;
-                            });
-                            window.themeTextColor = data.text_color;
-                            
-                            updatePageTabsColor(data.text_color);
-                            
-                            const statusText = document.getElementById('status-text');
-                            if (statusText) {
-                                statusText.style.color = data.text_color;
-                            }
-                        }
-
-                        if (data.title) {
-                            document.title = data.title;
-                        }
-                        else {
-                            document.title = 'BetterBio';
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching theme:', error);
-                });
-
-			fetch('api/profile/decoration')
-                .then(response => response.json())
-                .then(url => {
-                    if (url && url.trim() !== '') {
-                        const deco = document.getElementById('avatar-decoration');
-                        if (deco) {
-                            deco.src = url;
-                            deco.onload = function() {
-                                deco.style.display = 'block';
-                            };
-                            deco.onerror = function() {
-                                console.error('Failed to load decoration image from:', url);
-                                deco.style.display = 'none';
-                            };
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching decoration metadata:', error);
-                });
-				
-            fetch('api/profile/info')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('displayname').textContent = data.name || 'No Display Name';
-                    document.getElementById('username').textContent = `${data.username ? `@${data.username}` : '@no_username'} • ${data.pronouns || 'No pronouns'}`;
-                    const bioText = (data.bio || 'This user has no bio.').replace(/\\n/g, '\n');
-                    marked.setOptions({
-                        breaks: true, // convert single line breaks to <br>
-                        gfm: true     // enable GitHub Flavored Markdown
-                    });
-                    document.getElementById('bio-content').innerHTML = marked.parse(bioText);
-                    if (data.connections && data.connections.length > 0) {
-                        const bioSection = document.getElementById('bio');
-                        
-                        const connectionsHeader = document.createElement('p');
-                        connectionsHeader.className = 'bio-header';
-                        connectionsHeader.textContent = 'Connections';
-                        bioSection.appendChild(connectionsHeader);
-                        
-                        data.connections.forEach(connection => {
-                            const connectionDiv = document.createElement('div');
-                            connectionDiv.style.cssText = 'display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;';
-                            
-                            if (connection.iconurl) {
-                                const icon = document.createElement('img');
-                                icon.src = connection.iconurl;
-                                icon.style.cssText = 'width: 20px; height: 20px; margin-right: 8px; filter: brightness(0) invert(1);';
-                                connectionDiv.appendChild(icon);
-                            }
-                            
-                            const label = document.createElement('span');
-                            label.textContent = connection.label;
-                            label.style.textDecoration = 'underline';
-                            if (window.themeTextColor) {
-                                label.style.color = window.themeTextColor;
-                            }
-                            
-                            connectionDiv.appendChild(label);
-                            
-                            connectionDiv.addEventListener('click', () => {
-                                window.open(connection.url, '_blank');
-                            });
-                            
-                            bioSection.appendChild(connectionDiv);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching profile info:', error);
-                });
-            fetch('api/profile/joindate')
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.trim() !== '') {
-                        const bioSection = document.getElementById('bio');
-                        
-                        const joinedHeader = document.createElement('p');
-                        joinedHeader.className = 'bio-header';
-                        joinedHeader.textContent = 'Joined at';
-                        
-                        const joinedContent = document.createElement('p');
-                        joinedContent.className = 'bio-content';
-                        joinedContent.textContent = data;
-                        
-                        bioSection.appendChild(joinedHeader);
-                        bioSection.appendChild(joinedContent);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching profile info:', error);
-                });
-            fetch('api/status/online')
-                .then(response => response.json())
-                .then(data => {
-                    if (data === 'online') {
-                        document.getElementById('onlinedot').style.backgroundColor = "#43b581";
-                    }
-                    else if (data === 'idle') {
-                        document.getElementById('onlinedot').style.backgroundColor = "#faa61a";
-                    }
-                    else if (data === 'dnd') {
-                        document.getElementById('onlinedot').style.backgroundColor = "#f04747";
-                    }
-                    else if (data === '') {
-                        document.getElementById('onlinedot').style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching profile info:', error);
-                });
-            document.getElementById('container').style.display = 'block';
+function loadBadges() {
+    fetch('/api/profile/badges').then(r=>r.json()).then(badges => {
+        const row = document.getElementById('badges-row');
+        row.innerHTML = '';
+        badges.forEach(b => {
+            if (!b.icon_url) return;
+            const img = document.createElement('img');
+            img.src   = b.icon_url;
+            img.alt   = b.label;
+            img.title = b.label;
+            img.className = 'badge-icon';
+            row.appendChild(img);
         });
-    </script>
-    </body>
+    }).catch(()=>{});
+}
+
+function loadClan() {
+    fetch('/api/profile/clan').then(r=>r.json()).then(clan => {
+        const pill    = document.getElementById('clan-tag');
+        const badgeEl = document.getElementById('clan-badge-img');
+        const tagTxt  = document.getElementById('clan-tag-text');
+        if (clan.tag) {
+            tagTxt.textContent = clan.tag;
+            if (clan.badge_url) { badgeEl.src = clan.badge_url; badgeEl.style.display='inline'; }
+            pill.style.display = 'inline-flex';
+        }
+    }).catch(()=>{});
+}
+
+function loadProfileInfo() {
+    fetch('/api/profile/info').then(r=>r.json()).then(data => {
+        document.getElementById('displayname').textContent = data.name || 'No Display Name';
+        document.getElementById('username-text').textContent =
+            `${data.username ? '@'+data.username : '@no_username'}${data.pronouns ? ' • '+data.pronouns : ''}`;
+
+        const bioText = (data.bio || 'This user has no bio.').replace(/\\n/g, '\n');
+        marked.setOptions({ breaks: true, gfm: true });
+        document.getElementById('bio-content').innerHTML = marked.parse(bioText);
+
+        const scroll = document.getElementById('bio-scroll');
+        if (data.connections && data.connections.length > 0) {
+            const hdr = document.createElement('p');
+            hdr.className = 'bio-section-header';
+            hdr.textContent = 'Connections';
+            scroll.appendChild(hdr);
+            data.connections.forEach(c => {
+                const row = document.createElement('div');
+                row.className = 'connection-row';
+                row.addEventListener('click', () => window.open(c.url, '_blank'));
+                if (c.iconurl) {
+                    const icon = document.createElement('img');
+                    icon.src = c.iconurl;
+                    icon.className = 'connection-icon';
+                    row.appendChild(icon);
+                }
+                const lbl = document.createElement('span');
+                lbl.className = 'connection-label';
+                lbl.textContent = c.label;
+                if (window.themeTextColor) lbl.style.color = window.themeTextColor;
+                row.appendChild(lbl);
+                scroll.appendChild(row);
+            });
+        }
+    }).catch(()=>{});
+}
+
+function loadJoinDate() {
+    fetch('/api/profile/joindate').then(r=>r.json()).then(data => {
+        if (!data || !data.trim()) return;
+        const scroll = document.getElementById('bio-scroll');
+        const hdr = document.createElement('p');
+        hdr.className = 'bio-section-header';
+        hdr.textContent = 'Member Since';
+        scroll.appendChild(hdr);
+        const val = document.createElement('p');
+        val.style.fontSize = '14px';
+        val.style.margin = '0';
+        val.textContent = data;
+        scroll.appendChild(val);
+    }).catch(()=>{});
+}
+
+let spotifyInterval = null;
+function loadSpotify() {
+    fetch('/api/activity/spotify').then(r=>r.json()).then(sp => {
+        const scroll = document.getElementById('bio-scroll');
+        const existing = document.getElementById('spotify-card');
+        if (existing) existing.remove();
+        if (spotifyInterval) { clearInterval(spotifyInterval); spotifyInterval = null; }
+        if (!sp || !sp.title) return;
+
+        const hdr = document.createElement('p');
+        hdr.className = 'bio-section-header';
+        hdr.id = 'spotify-header';
+        hdr.textContent = 'Listening to Spotify';
+        scroll.appendChild(hdr);
+
+        const card = document.createElement('div');
+        card.className = 'spotify-card';
+        card.id = 'spotify-card';
+        card.addEventListener('click', () => { if (sp.track_url) window.open(sp.track_url,'_blank'); });
+
+        const artImg = document.createElement('img');
+        artImg.src = sp.album_art || '';
+        artImg.className = 'spotify-art';
+        artImg.alt = 'album art';
+
+        const info = document.createElement('div');
+        info.className = 'spotify-info';
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'spotify-title';
+        titleEl.textContent = sp.title;
+
+        const artistEl = document.createElement('div');
+        artistEl.className = 'spotify-artist';
+        artistEl.textContent = sp.artist;
+
+        const barWrap = document.createElement('div');
+        barWrap.className = 'spotify-bar-wrap';
+        const barFill = document.createElement('div');
+        barFill.className = 'spotify-bar-fill';
+        barWrap.appendChild(barFill);
+
+        info.append(titleEl, artistEl, barWrap);
+
+        const logo = document.createElementNS('http://www.w3.org/2000/svg','svg');
+        logo.setAttribute('viewBox','0 0 168 168');
+        logo.classList.add('spotify-logo');
+        logo.style.cssText = 'flex-shrink:0;';
+        logo.innerHTML = `<circle cx="84" cy="84" r="84" fill="#1ed760"/>
+            <path fill="#000" d="M120.5 117.2c-1.6 2.6-5 3.4-7.6 1.8C93.6 107 69 104.5 40.2 111c-3 .7-5.9-1.1-6.6-4.1-.7-3 1.1-5.9 4.1-6.6 31.6-7.2 58.7-4.1 81.1 9.3 2.6 1.6 3.4 5 1.7 7.6zm9.6-22.6c-2 3.3-6.3 4.3-9.6 2.3-22.7-14-57.3-18-84.1-9.8-3.4 1-7.1-.9-8.1-4.3-1-3.4.9-7.1 4.3-8.1 30.7-9.3 68.8-4.8 94.9 11.3 3.4 2 4.4 6.3 2.6 8.6zm.8-23.5c-27.3-16.2-72.4-17.7-98.5-9.8-4.2 1.3-8.6-1.1-9.9-5.3-1.3-4.2 1.1-8.6 5.3-9.9 29.9-9.1 79.7-7.3 111.1 11.3 3.7 2.2 5 7 2.8 10.7-2.2 3.7-7 5-10.8 3z"/>`;
+
+        card.append(artImg, info, logo);
+        scroll.appendChild(card);
+
+        if (sp.start && sp.duration) {
+            function updateBar() {
+                const elapsed = (Date.now() - new Date(sp.start).getTime()) / 1000;
+                const pct = Math.min(100, (elapsed / sp.duration) * 100);
+                barFill.style.width = pct + '%';
+            }
+            updateBar();
+            spotifyInterval = setInterval(updateBar, 1000);
+        }
+
+        if (window.themeTextColor) {
+            card.querySelectorAll('*').forEach(el => el.style.color = window.themeTextColor);
+        }
+    }).catch(()=>{});
+}
+
+function loadActivities() {
+    fetch('/api/activity/list').then(r=>r.json()).then(acts => {
+        const scroll = document.getElementById('bio-scroll');
+        document.querySelectorAll('.activity-hdr,.activity-card').forEach(el=>el.remove());
+        if (!acts || acts.length === 0) return;
+
+        acts.forEach(act => {
+            const card = document.createElement('div');
+            card.className = 'activity-card';
+
+            if (act.image) {
+                const img = document.createElement('img');
+                img.src = act.image;
+                img.className = 'activity-img';
+                img.alt = '';
+                card.appendChild(img);
+            }
+
+            const info = document.createElement('div');
+            info.className = 'activity-info';
+
+            const typeEl = document.createElement('div');
+            typeEl.className = 'activity-type';
+            typeEl.textContent = act.type || 'Playing';
+
+            const nameEl = document.createElement('div');
+            nameEl.className = 'activity-name';
+            nameEl.textContent = act.name;
+
+            info.append(typeEl, nameEl);
+
+            if (act.details) {
+                const det = document.createElement('div');
+                det.className = 'activity-detail';
+                det.textContent = act.details;
+                info.appendChild(det);
+            }
+            if (act.state) {
+                const st = document.createElement('div');
+                st.className = 'activity-detail';
+                st.textContent = act.state;
+                info.appendChild(st);
+            }
+
+            card.appendChild(info);
+            scroll.appendChild(card);
+        });
+
+        if (window.themeTextColor) {
+            document.querySelectorAll('.activity-card *').forEach(el=>el.style.color=window.themeTextColor);
+        }
+    }).catch(()=>{});
+}
+
+function loadDecoration() {
+    fetch('/api/profile/decoration').then(r=>r.json()).then(url => {
+        const el = document.getElementById('avatar-decoration');
+        if (url && url.trim()) {
+            el.src = url;
+            el.onload = () => el.style.display = 'block';
+            el.onerror = () => el.style.display = 'none';
+        }
+    }).catch(()=>{});
+}
+
+let currentActivePage = null;
+function loadPages() {
+    fetch('/pages').then(r=>r.json()).then(pages => {
+        if (!pages.length) {
+            document.getElementById('page-content').style.display = 'none';
+            document.getElementById('pages-navbar').style.display = 'none';
+            return;
+        }
+        setupPagesNavbar(pages);
+        const preferred = ['about','ABOUT','readme','README'];
+        const def = preferred.find(p=>pages.includes(p)) || pages[0];
+        loadPageContent(def);
+        setActiveTab(def);
+    }).catch(()=>{
+        document.getElementById('page-content').style.display = 'none';
+        document.getElementById('pages-navbar').style.display = 'none';
+    });
+}
+function setupPagesNavbar(pages) {
+    const nav = document.getElementById('pages-navbar');
+    nav.innerHTML = '';
+    pages.forEach(name => {
+        const btn = document.createElement('button');
+        btn.className = 'page-tab inactive';
+        btn.textContent = name;
+        btn.dataset.pageName = name;
+        btn.addEventListener('click', () => { loadPageContent(name); setActiveTab(name); });
+        nav.appendChild(btn);
+    });
+}
+function setActiveTab(active) {
+    currentActivePage = active;
+    document.querySelectorAll('.page-tab').forEach(tab => {
+        const isActive = tab.dataset.pageName === active;
+        tab.className = 'page-tab ' + (isActive ? 'active' : 'inactive');
+        if (window.themeTextColor)
+            tab.style.color = isActive ? window.themeTextColor
+                                       : `color-mix(in srgb, ${window.themeTextColor} 60%, transparent)`;
+    });
+}
+function loadPageContent(name) {
+    const div = document.getElementById('page-content');
+    div.innerHTML = '<p>loading page...</p>';
+    fetch(`/page/${name}`).then(r => {
+        if (!r.ok) throw new Error(r.status);
+        return r.text();
+    }).then(md => {
+        marked.setOptions({ breaks: true, gfm: true });
+        div.innerHTML = marked.parse(md);
+        if (window.themeTextColor)
+            div.querySelectorAll('*').forEach(el => el.style.color = window.themeTextColor);
+    }).catch(e => { div.innerHTML = `<p>Error loading "${name}": ${e.message}</p>`; });
+}
+function updatePageTabsColor(color) {
+    document.querySelectorAll('.page-tab').forEach(tab => {
+        tab.style.color = tab.classList.contains('active')
+            ? color
+            : `color-mix(in srgb, ${color} 60%, transparent)`;
+    });
+}
+
+function loadTheme() {
+    fetch('/api/profile/theme').then(r=>r.json()).then(data => {
+        if (data.background_color) {
+            document.body.style.backgroundColor = data.background_color;
+            const sb = document.getElementById('status-bubble');
+            if (sb) sb.style.backgroundColor = data.background_color;
+        }
+
+        if (Array.isArray(data.profile_color)) {
+            const g  = `linear-gradient(180deg, ${data.profile_color[0]} 0%, ${data.profile_color[1]} 100%)`;
+            const gd = `linear-gradient(180deg, color-mix(in srgb,${data.profile_color[0]} 70%,black) 0%, color-mix(in srgb,${data.profile_color[1]} 70%,black) 100%)`;
+            document.querySelector('.container').style.background = gd;
+            document.querySelector('.profile').style.setProperty('--gradient', g);
+            document.querySelector('.profile-image').style.boxShadow = `0 0 0 6px ${data.profile_color[0]}`;
+            document.querySelector('.onlinedot').style.boxShadow    = `0 0 0 5px ${data.profile_color[0]}`;
+            const r0=parseColor(data.profile_color[0]), r1=parseColor(data.profile_color[1]);
+            if (r0&&r1) {
+                const avg = `rgb(${(r0.r+r1.r)/2},${(r0.g+r1.g)/2},${(r0.b+r1.b)/2})`;
+                data._autoText = getContrastTextColor(avg);
+            }
+        } else if (data.profile_color) {
+            const darker = `color-mix(in srgb, ${data.profile_color} 70%, black)`;
+            document.querySelector('.container').style.backgroundColor = darker;
+            document.querySelector('.profile').style.setProperty('--gradient-color', data.profile_color);
+            document.querySelector('.profile-image').style.boxShadow = `0 0 0 6px ${data.profile_color}`;
+            document.querySelector('.onlinedot').style.boxShadow    = `0 0 0 5px ${data.profile_color}`;
+            data._autoText = getContrastTextColor(data.profile_color);
+        }
+
+        const finalColor = data._autoText || data.text_color || '#ffffff';
+        applyTextColor(finalColor);
+
+        if (data.title) document.title = data.title;
+    }).catch(()=>{});
+}
+
+window.addEventListener('load', function() {
+    loadTheme();
+    loadAvatar();
+    loadBanner();
+    loadDecoration();
+    loadStatusDot();
+    loadStatusBubble();
+    loadBadges();
+    loadClan();
+    loadProfileInfo();
+    loadJoinDate();
+    loadSpotify();
+    loadActivities();
+    loadPages();
+
+    document.getElementById('container').style.display = 'block';
+
+    setInterval(() => {
+        loadStatusDot();
+        loadStatusBubble();
+        loadSpotify();
+        loadActivities();
+    }, 30000);
+});
+</script>
+</body>
 </html>
